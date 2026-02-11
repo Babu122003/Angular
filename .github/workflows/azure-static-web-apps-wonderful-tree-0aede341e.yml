@@ -55,7 +55,7 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_TREE_0AEDE341E }}
           action: upload
           app_location: ./shopping-cart
-          output_location: dist/shopping-cart
+          output_location: dist/skillerexplorer
           # Force the action NOT to rebuild; use what we just built
           skip_app_build: true
 
