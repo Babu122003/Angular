@@ -9,7 +9,6 @@ on:
 
 jobs:
   build_and_deploy_job:
-    # Only run for push and open/sync/reopen PRs (not when PR is closed)
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
@@ -22,14 +21,20 @@ jobs:
           submodules: true
           lfs: false
 
-      # Pin a stable Node version (match your local dev if possible)
       - name: Use Node 18
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # Install & Build inside the app folder
-      - name: Install dependencies
+      # Sanity: show folder tree to ensure the app path is right
+      - name: Debug – repo tree (top level)
+        run: |
+          pwd
+          ls -la
+          echo "---- shopping-cart content ----"
+          ls -la ./shopping-cart || true
+
+      - name: Install dependencies (Angular app)
         working-directory: ./shopping-cart
         run: npm ci
 
@@ -37,15 +42,22 @@ jobs:
         working-directory: ./shopping-cart
         run: npm run build
 
-      # Deploy the built artifacts
-      - name: Build And Deploy
-        id: builddeploy
+      # Sanity: confirm the expected dist path exists
+      - name: Debug – built artifacts
+        run: |
+          echo "Listing dist paths…"
+          ls -la ./shopping-cart/dist || true
+          ls -la ./shopping-cart/dist/shopping-cart || true
+
+      - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_TREE_0AEDE341E }}
           action: upload
           app_location: ./shopping-cart
           output_location: dist/shopping-cart
+          # Force the action NOT to rebuild; use what we just built
+          skip_app_build: true
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
@@ -53,7 +65,6 @@ jobs:
     name: Close Pull Request Job
     steps:
       - name: Close Pull Request
-        id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
           action: close
