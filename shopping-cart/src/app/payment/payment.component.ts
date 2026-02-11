@@ -35,7 +35,7 @@ export class PaymentComponent implements OnInit {
       return;
     }
 
-    this.paymentData = `Payment for ${this.userName} - Amount: $${this.total}`;
+    this.paymentData = `upi://pay?pa=6383393717-3@ibl&pn=${encodeURIComponent(this.userName)}&am=${this.total}&cu=INR&tn=${encodeURIComponent('Shopping Cart Payment')}`;
     this.generateQRCode();
   }
 
