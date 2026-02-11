@@ -1,11 +1,11 @@
 [
   {
     "id": 1,
-    "email": "user@test.com",
+    "email": "babu.r@ltts.com",
     "password": "123456",
-    "name": "John Doe",
-    "phone": "+1234567890",
-    "address": "123 Main St, City, Country"
+    "name": "Babu R",
+    "phone": "6383393717",
+    "address": "Mysore,Karnataka,India"
   },
   {
     "id": 2,
