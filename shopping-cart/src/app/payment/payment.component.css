@@ -1,0 +1,103 @@
+.payment-container {
+  min-height: calc(100vh - 70px);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.payment-box {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.payment-box h1 {
+  text-align: center;
+  color: #667eea;
+  margin-bottom: 30px;
+  font-size: 32px;
+}
+
+.payment-info {
+  background: #f8f9ff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.payment-info h2 {
+  color: #333;
+  font-size: 24px;
+  margin: 0 0 10px 0;
+}
+
+.payment-info p {
+  color: #666;
+  margin: 0;
+  font-size: 16px;
+}
+
+.qr-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.qr-section h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.qr-section canvas {
+  border: 2px solid #667eea;
+  border-radius: 12px;
+  padding: 10px;
+  background: white;
+}
+
+.qr-hint {
+  color: #666;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.payment-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.confirm-btn, .cancel-btn {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.confirm-btn {
+  background: #667eea;
+  color: white;
+}
+
+.confirm-btn:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.cancel-btn {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.cancel-btn:hover {
+  background: #e0e0e0;
+  transform: translateY(-2px);
+}
