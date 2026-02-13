@@ -7,6 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Gemini AI Assistant';
-  subtitle = 'Powered by Google Gemini 2.5 Flash';
+  title = 'AI Assistant';
+
 }

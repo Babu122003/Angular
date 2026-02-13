@@ -2,12 +2,12 @@
   <div class="messages-container">
     <div class="empty-state" *ngIf="messages.length === 0">
       <i class="icon-chat"></i>
-      <p>Start a conversation with Gemini</p>
+      <p>Start a conversation with Ai</p>
     </div>
     
     <div class="message" *ngFor="let message of messages" [class.user-message]="message.role === 'user'" [class.assistant-message]="message.role === 'assistant'">
       <div class="message-header">
-        <span class="role">{{ message.role === 'user' ? 'You' : 'Gemini' }}</span>
+        <span class="role">{{ message.role === 'user' ? 'You' : 'Ai' }}</span>
         <span class="timestamp">{{ message.timestamp | date: 'short' }}</span>
       </div>
       <div class="message-content">{{ message.content }}</div>
@@ -15,7 +15,7 @@
     
     <div class="message assistant-message loading" *ngIf="isLoading">
       <div class="message-header">
-        <span class="role">Gemini</span>
+        <span class="role">Ai</span>
       </div>
       <div class="message-content">
         <div class="typing-indicator">
@@ -36,7 +36,7 @@
     <textarea
       [(ngModel)]="userInput"
       (keypress)="handleKeyPress($event)"
-      placeholder="Ask Gemini anything..."
+      placeholder="Ask Ai anything..."
       class="message-input"
       rows="3"
     ></textarea>
