@@ -1,4 +1,30 @@
 <div class="chat-container">
+  <div class="chat-header">
+    <button (click)="startNewChat()" class="header-button">
+      <i class="icon-new"></i>
+      New Chat
+    </button>
+    <button (click)="toggleHistory()" class="header-button">
+      <i class="icon-history"></i>
+      History
+    </button>
+  </div>
+  
+  <div class="history-panel" *ngIf="showHistoryPanel">
+    <div class="history-header">
+      <h3>Chat History</h3>
+      <button (click)="toggleHistory()" class="close-button">×</button>
+    </div>
+    <div class="history-list">
+      <div *ngIf="chatHistory.length === 0" class="no-history">No saved chats yet</div>
+      <div *ngFor="let chat of chatHistory; let i = index" class="history-item" (click)="loadChat(i)">
+        <div class="history-title">Chat {{ i + 1 }}</div>
+        <div class="history-preview">{{ chat[0]?.content?.substring(0, 50) || 'Empty chat' }}...</div>
+        <div class="history-date">{{ chat[0]?.timestamp | date: 'short' }}</div>
+      </div>
+    </div>
+  </div>
+  
   <div class="messages-container">
     <div class="empty-state" *ngIf="messages.length === 0">
       <i class="icon-chat"></i>
