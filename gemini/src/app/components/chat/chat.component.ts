@@ -13,6 +13,9 @@ export class ChatComponent {
   error: string | null = null;
   chatHistory: Message[][] = [];
   showHistoryPanel = false;
+  selectedImage: string | null = null;
+  selectedImageData: string | null = null;
+  currentChatIndex: number | null = null;
 
   constructor(private geminiService: GeminiService) {
     this.geminiService.messages$.subscribe(messages => this.messages = messages);
@@ -22,14 +25,15 @@ export class ChatComponent {
   }
 
   get isSendDisabled(): boolean {
-    return !this.userInput.trim() || this.isLoading;
+    return (!this.userInput.trim() && !this.selectedImage) || this.isLoading;
   }
 
   async sendMessage(): Promise<void> {
     const message = this.userInput.trim();
-    if (message && !this.isLoading) {
+    if ((message || this.selectedImage) && !this.isLoading) {
       this.userInput = '';
-      await this.geminiService.sendMessage(message);
+      await this.geminiService.sendMessage(message, this.selectedImageData || undefined);
+      this.removeImage();
     }
   }
 
@@ -42,9 +46,14 @@ export class ChatComponent {
 
   startNewChat(): void {
     if (this.messages.length > 0) {
-      this.chatHistory.push([...this.messages]);
+      if (this.currentChatIndex !== null) {
+        this.chatHistory[this.currentChatIndex] = [...this.messages];
+      } else {
+        this.chatHistory.unshift([...this.messages]);
+      }
       this.saveChatHistory();
     }
+    this.currentChatIndex = null;
     this.geminiService.clearChat();
   }
 
@@ -54,8 +63,31 @@ export class ChatComponent {
 
   loadChat(index: number): void {
     const chat = this.chatHistory[index];
-    this.messages = [...chat];
+    this.currentChatIndex = index;
+    this.geminiService.loadMessages([...chat]);
     this.showHistoryPanel = false;
+  }
+
+  deleteChat(index: number): void {
+    this.chatHistory.splice(index, 1);
+    this.saveChatHistory();
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedImage = e.target.result;
+        this.selectedImageData = e.target.result.split(',')[1];
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeImage(): void {
+    this.selectedImage = null;
+    this.selectedImageData = null;
   }
 
   private saveChatHistory(): void {

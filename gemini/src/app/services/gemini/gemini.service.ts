@@ -24,11 +24,8 @@ export class GeminiService {
   isLoading$ = this.isLoadingSubject.asObservable();
   error$ = this.errorSubject.asObservable();
 
-  async listModels(): Promise<void> {
-    // Removed - only for debugging
-  }
-
-  async sendMessage(userMessage: string): Promise<void> {
+  
+  async sendMessage(userMessage: string, imageData?: string): Promise<void> {
     if (!this.apiKey) {
       this.errorSubject.next('Please configure your Gemini API key in the environment file');
       return;
@@ -37,8 +34,8 @@ export class GeminiService {
     // Add user message to the chat
     const newUserMessage: Message = {
       role: 'user',
-      content: userMessage,
-      timestamp: new Date()
+      content: userMessage || '[Image]',
+      timestamp: new Date() 
     };
     
     this.messagesSubject.next([...this.messagesSubject.value, newUserMessage]);
@@ -46,18 +43,20 @@ export class GeminiService {
     this.errorSubject.next(null);
 
     try {
-      // Add conversation history
-      const conversationHistory = this.messagesSubject.value
-        .slice(0, -1)
-        .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
-        .join('\n');
+      const parts: any[] = [];
       
-      let prompt = '';
-      if (conversationHistory) {
-        prompt += `Previous conversation:\n${conversationHistory}\n\n`;
+      if (userMessage) {
+        parts.push({ text: userMessage });
       }
       
-      prompt += `User: ${userMessage}`;
+      if (imageData) {
+        parts.push({
+          inline_data: {
+            mime_type: 'image/jpeg',
+            data: imageData
+          }
+        });
+      }
 
       const response = await fetch(`${this.apiUrl}?key=${this.apiKey}`, {
         method: 'POST',
@@ -65,9 +64,7 @@ export class GeminiService {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          contents: [{
-            parts: [{ text: prompt }]
-          }]
+          contents: [{ parts }]
         })
       });
 
@@ -96,5 +93,9 @@ export class GeminiService {
   clearChat(): void {
     this.messagesSubject.next([]);
     this.errorSubject.next(null);
+  }
+
+  loadMessages(messages: Message[]): void {
+    this.messagesSubject.next(messages);
   }
 }

@@ -17,10 +17,13 @@
     </div>
     <div class="history-list">
       <div *ngIf="chatHistory.length === 0" class="no-history">No saved chats yet</div>
-      <div *ngFor="let chat of chatHistory; let i = index" class="history-item" (click)="loadChat(i)">
-        <div class="history-title">Chat {{ i + 1 }}</div>
-        <div class="history-preview">{{ chat[0]?.content?.substring(0, 50) || 'Empty chat' }}...</div>
-        <div class="history-date">{{ chat[0]?.timestamp | date: 'short' }}</div>
+      <div *ngFor="let chat of chatHistory; let i = index" class="history-item">
+        <div (click)="loadChat(i)" class="history-content">
+          <div class="history-title">Chat {{ i + 1 }}</div>
+          <div class="history-preview">{{ chat[0]?.content?.substring(0, 50) || 'Empty chat' }}...</div>
+          <div class="history-date">{{ chat[0]?.timestamp | date: 'short' }}</div>
+        </div>
+        <button (click)="deleteChat(i); $event.stopPropagation()" class="delete-chat" title="Delete">×</button>
       </div>
     </div>
   </div>
@@ -59,6 +62,20 @@
   </div>
   
   <div class="input-container">
+    <input 
+      type="file" 
+      #fileInput 
+      (change)="onFileSelected($event)" 
+      accept="image/*" 
+      style="display: none;"
+    />
+    <button (click)="fileInput.click()" class="image-button" title="Upload image">
+      <img src="data:image/webp;base64,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" alt="Upload" class="button-icon" />
+    </button>
+    <div class="image-preview" *ngIf="selectedImage">
+      <img [src]="selectedImage" alt="Preview" />
+      <button (click)="removeImage()" class="remove-image">×</button>
+    </div>
     <textarea
       [(ngModel)]="userInput"
       (keypress)="handleKeyPress($event)"
