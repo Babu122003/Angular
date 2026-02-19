@@ -71,6 +71,7 @@ export class ChatComponent {
   deleteChat(index: number): void {
     this.chatHistory.splice(index, 1);
     this.saveChatHistory();
+    //updated
   }
 
   onFileSelected(event: any): void {
