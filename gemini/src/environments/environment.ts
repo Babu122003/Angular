@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  geminiApiKey: 'AIzaSyBsnDHp4nVEh-uYhtg_ER2L8lyaqqx8v8k'
+  geminiApiKey: 'YOUR_NEW_API_KEY_HERE'
 };
